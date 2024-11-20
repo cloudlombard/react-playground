@@ -1,4 +1,5 @@
 import { Button, Form, Input } from "antd";
+import { useParams } from "react-router-dom";
 
 const BaseUserForm = ({
   method = "POST",
@@ -7,9 +8,10 @@ const BaseUserForm = ({
 }) => {
   const [form] = Form.useForm();
 
+  const { id } = useParams();
   const onFinish = async (values) => {
-    console.log(values);
-    const response = await fetch(`http://localhost:8001/api${endpoint}`, {
+    const url = endpoint + (method === "PUT" && id ? `/${id}` : "");
+    const response = await fetch(`http://localhost:8001/api${url}`, {
       method,
       headers: {
         "Content-Type": "application/json",
@@ -33,7 +35,12 @@ const BaseUserForm = ({
       <Form.Item
         label="Username"
         name="username"
-        rules={[{ required: true, message: "Please input your username!" }]}
+        rules={[
+          {
+            required: method === "POST",
+            message: "Please input your username!",
+          },
+        ]}
       >
         <Input />
       </Form.Item>
@@ -41,7 +48,9 @@ const BaseUserForm = ({
       <Form.Item
         label="Email"
         name="email"
-        rules={[{ required: true, message: "Please input your email!" }]}
+        rules={[
+          { required: method === "POST", message: "Please input your email!" },
+        ]}
       >
         <Input />
       </Form.Item>
@@ -49,7 +58,12 @@ const BaseUserForm = ({
       <Form.Item
         label="Password"
         name="password"
-        rules={[{ required: true, message: "Please input your password!" }]}
+        rules={[
+          {
+            required: method === "POST",
+            message: "Please input your password!",
+          },
+        ]}
       >
         <Input.Password />
       </Form.Item>
